@@ -1,0 +1,31 @@
+@import '../../variables.scss';
+
+.front-section {
+   min-height: 650px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   background: url('../../assets/main-bg-img.jpg');
+   background-size: cover;
+   background-repeat: no-repeat;
+   color: #fff;
+
+   margin-bottom: 140px;
+}
+
+.front-section__content {
+   max-width: 380px;
+   text-align: center;
+   padding: 0 10px;
+}
+
+.front-section-title {
+   font-size: $heading-font-size;
+   line-height: $heading-font-size;
+   margin-bottom: 21px;
+}
+
+.front-section-text {
+   margin-bottom: 32px;
+}

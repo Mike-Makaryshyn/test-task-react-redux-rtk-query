@@ -1,0 +1,131 @@
+@import './reset.scss';
+@import './variables.scss';
+
+body {
+   font-family: $main-font-family;
+   font-size: $main-font-size;
+   line-height: 26px;
+   color: rgba(0, 0, 0, 0.87);
+   background-color: $bg-color;
+}
+
+.container {
+   max-width: $max-width;
+   width: 100%;
+   margin: 0 auto;
+}
+
+.title {
+   font-size: 40px;
+   line-height: 40px;
+   margin-bottom: 50px;
+}
+
+.dynamic-padding {
+   padding: 0px 60px;
+}
+
+.center {
+   text-align: center;
+}
+
+.toolkit {
+   padding: 3px 16px;
+   background-color: #000;
+   color: #fff;
+   position: absolute;
+
+   display: inline-block;
+   bottom: -25px;
+   right: 0;
+   left: 0;
+   margin: 0 auto;
+   border-radius: 4px;
+   line-break: anywhere;
+}
+
+@media (min-width: 1200px) {
+   .dynamic-padding {
+      padding: 0px;
+   }
+}
+
+@media (max-width: 768px) {
+   .dynamic-padding {
+      padding: 0px 32px;
+   }
+
+   .toolkit {
+      bottom: -40px;
+      right: 0;
+      left: 0;
+      margin: 0 auto;
+      border-radius: 4px;
+   }
+}
+
+@media (max-width: 360px) {
+   .dynamic-padding {
+      padding: 0px 16px;
+   }
+}
+
+
+
+
+// buttons
+
+.regular-btn {
+   background-color: $first-color;
+   border: none;
+   border-radius: 80px;
+   padding: 4px 22px;
+   line-height: 24px;
+   cursor: pointer;
+   transition: background-color .1s ease;
+
+   &:hover {
+      background-color: $first-color-hover;
+   }
+}
+.disabled-btn {
+   background-color: #B4B4B4;
+   color: #fff;
+   border: none;
+   border-radius: 80px;
+   padding: 4px 22px;
+   line-height: 24px;
+   cursor: pointer;
+   transition: background-color .1s ease;
+}
+
+
+
+// animations
+
+.user-enter {
+   opacity: 0;
+   transform: translateY(-10%);
+}
+
+.user-enter-active {
+   opacity: 1;
+   transition: all 350ms ease-in-out;
+   transform: translateY(0);
+}
+
+.user-exit {
+   opacity: 1;
+   transform: translateY(0);
+}
+
+.user-exit-active {
+   opacity: 0;
+   transform: translateY(0);
+   transition: all 350ms ease-in-out;
+}
+
+.positions-radio {
+   color: #00BDD3;
+}
+
