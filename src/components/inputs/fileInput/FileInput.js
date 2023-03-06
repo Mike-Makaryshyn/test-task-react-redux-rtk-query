@@ -13,7 +13,6 @@ const FileInput = ({requestError, requestSuccess, setFieldValue,errors,touched }
       [styles.errorMessage]: errors.photo && touched.photo,
    });
 
-   console.log(requestError)
 
    useEffect(()=>{
       if(requestError || requestSuccess) {
