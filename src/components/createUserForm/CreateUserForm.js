@@ -3,16 +3,23 @@ import successImg from "../../assets/success-image.svg";
 import singUpSchema from "../../utils/schemaValidation";
 import { Form, Formik } from "formik";
 
-import InputForm from '../inputs/inputForm/InputForm';
-import FileInput from '../inputs/fileInput/FileInput';
-import RadioInputs from '../inputs/radioInputs/RadioInputs';
+import InputForm from "../inputs/inputForm/InputForm";
+import FileInput from "../inputs/fileInput/FileInput";
+import RadioInputs from "../inputs/radioInputs/RadioInputs";
 import Spinner from "../spinners/Spinner";
 
-import {  useGetTokenQuery } from "../../redux/apiSlice";
+import { useGetTokenQuery } from "../../redux/apiSlice";
 
 import "./create-user.scss";
 
-const CreateUserForm = ({ singUpRef, createUser, isSuccess, isLoading, isError, error }) => {
+const CreateUserForm = ({
+  singUpRef,
+  createUser,
+  isSuccess,
+  isLoading,
+  isError,
+  error,
+}) => {
   const successBlockRef = useRef();
 
   const { data: tokenData } = useGetTokenQuery();
@@ -40,6 +47,17 @@ const CreateUserForm = ({ singUpRef, createUser, isSuccess, isLoading, isError, 
     // eslint-disable-next-line
   }, [isSuccess]);
 
+  const handleSubmit = (values, { resetForm }) => {
+    const formData = new FormData();
+    formData.append("photo", values.photo);
+    formData.append("position_id", +values.position_id);
+    formData.append("name", values.name);
+    formData.append("email", values.email);
+    formData.append("phone", values.phone);
+
+    createUser({ formData, token: tokenData.token });
+    resetForm(initialValues);
+  };
 
   return (
     <>
@@ -48,38 +66,41 @@ const CreateUserForm = ({ singUpRef, createUser, isSuccess, isLoading, isError, 
           <h2 className="title">Working with POST request</h2>
         </div>
         <Formik
-          className="create-user__form" 
+          className="create-user__form"
           initialValues={initialValues}
           validationSchema={singUpSchema}
-          onSubmit ={(values, {resetForm}) => {
-            const formData = new FormData();
-            formData.append('photo', values.photo);
-            formData.append('position_id', +values.position_id);
-            formData.append('name', values.name);
-            formData.append('email', values.email);
-            formData.append('phone', values.phone);
-
-            createUser({ formData, token: tokenData.token });
-            resetForm(initialValues);
-          }}
+          onSubmit={handleSubmit}
         >
           {({ errors, touched, setFieldValue, isValid }) => (
             <>
-            {isLoading ? <Spinner /> : null}
+              {isLoading ? <Spinner /> : null}
               <Form className="create-user__form">
                 <InputForm name="name" errors={errors} touched={touched} />
                 <InputForm name="email" errors={errors} touched={touched} />
                 <InputForm name="phone" errors={errors} touched={touched} />
                 <RadioInputs errors={errors} touched={touched} />
                 <FileInput
+                  requestError={error}
+                  requestSuccess={isSuccess}
                   errors={errors}
                   touched={touched}
                   setFieldValue={setFieldValue}
                 />
-                {isError ? <div style={{color: 'red', margin:'15px'}}>{error.data.message}</div> : null}
+                {isError ? (
+                  <div style={{ color: "red", margin: "15px" }}>
+                    {error.data.message}
+                  </div>
+                ) : null}
 
-               <div className="center">
-                   <button className={`submit-btn${isValid ? ' regular-btn' : ' disabled-btn'}`} type="submit">Sign up</button>
+                <div className="center">
+                  <button
+                    className={`submit-btn${
+                      isValid ? " regular-btn" : " disabled-btn"
+                    }`}
+                    type="submit"
+                  >
+                    Sign up
+                  </button>
                 </div>
               </Form>
             </>

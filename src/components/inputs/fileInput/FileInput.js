@@ -1,17 +1,26 @@
-import React,{ useState } from "react";
+import React,{ useEffect, useState } from "react";
 import classNames from "classnames";
 import { CSSTransition } from "react-transition-group";
 
 import { ErrorMessage } from "formik";
 import styles from "./file-input.module.scss";
 
-const FileInput = ({ setFieldValue,errors,touched, keyObj }) => {
+const FileInput = ({requestError, requestSuccess, setFieldValue,errors,touched }) => {
    const [fileName, setFileName] = useState('Upload your photo');
    const [fullFileName, setFullFileName] = useState('');
 
    const redErrorMessage = classNames({
       [styles.errorMessage]: errors.photo && touched.photo,
    });
+
+   console.log(requestError)
+
+   useEffect(()=>{
+      if(requestError || requestSuccess) {
+         setFileName(()=> 'Upload your photo');
+         setFullFileName(()=> 'Upload your photo');
+      }
+   }, [requestError, requestSuccess])
 
    const [isFileNameHover,setIsFileNameHover] = useState(false);
    const maxTextLength = 26;
@@ -26,12 +35,11 @@ const FileInput = ({ setFieldValue,errors,touched, keyObj }) => {
          setFileName(()=> `${file.name.slice(0, maxTextLength)}...`);
          setFullFileName(file.name)
       } else if (file && file.name && file.name.length <= maxTextLength) {
-         setFileName(()=> `${file.name}`);
+         setFileName(()=> `${file.name}`);      
       } else {
          setFileName(()=> 'Upload your photo');
       }
    };
-   
 
    return (
       <div className="input-file__wrapper">
