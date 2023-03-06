@@ -8,14 +8,13 @@ import FileInput from '../inputs/fileInput/FileInput';
 import RadioInputs from '../inputs/radioInputs/RadioInputs';
 import Spinner from "../spinners/Spinner";
 
-import { useCreateUserMutation, useGetTokenQuery } from "../../redux/apiSlice";
+import {  useGetTokenQuery } from "../../redux/apiSlice";
 
 import "./create-user.scss";
 
-const CreateUserForm = ({ singUpRef }) => {
+const CreateUserForm = ({ singUpRef, createUser, isSuccess, isLoading, isError, error }) => {
   const successBlockRef = useRef();
 
-  const [createUser, { isSuccess, isLoading, isError, error }] = useCreateUserMutation();
   const { data: tokenData } = useGetTokenQuery();
 
   const initialValues = {

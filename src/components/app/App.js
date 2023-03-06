@@ -2,12 +2,23 @@ import Header from "../header/Header";
 import UsersList from "../usersList/UsersList";
 import FrontSetion from "../frontSection/FrontSection";
 import CreateUserForm from "../createUserForm/CreateUserForm";
+import { useCreateUserMutation } from "../../redux/apiSlice";
 
 import { useRef } from "react";
 
 function App() {
   const userRef = useRef(null);
   const singUpRef = useRef(null);
+
+  const [
+    createUser,
+    {
+      isSuccess: isSuccessForm,
+      isLoading: isLoadingForm,
+      isError: isErrorForm,
+      error: errorForm,
+    },
+  ] = useCreateUserMutation();
 
   const handleButtonClick = (ref) => {
     if (ref.current) {
@@ -17,18 +28,25 @@ function App() {
 
   return (
     <div className="app">
-      <Header 
-         onUserClick={()=> handleButtonClick(userRef)} 
-         onSingUpClick={()=> handleButtonClick(singUpRef)}
+      <Header
+        onUserClick={() => handleButtonClick(userRef)}
+        onSingUpClick={() => handleButtonClick(singUpRef)}
       />
 
-      <div className="container">
-        <FrontSetion onSingUpClick={()=> handleButtonClick(singUpRef)} />
-        <div className="dynamic-padding">
-          <UsersList userRef={userRef}/>
-          <CreateUserForm singUpRef={singUpRef}/>
+      <main className="container">
+        <FrontSetion onSingUpClick={() => handleButtonClick(singUpRef)} />
+        <div className="requests-components dynamic-padding">
+          <UsersList userRef={userRef} isSuccessForm={isSuccessForm} />
+          <CreateUserForm
+            createUser={createUser}
+            isSuccess={isSuccessForm}
+            isLoading={isLoadingForm}
+            isError={isErrorForm}
+            error={errorForm}
+            singUpRef={singUpRef}
+          />
         </div>
-      </div>
+      </main>
     </div>
   );
 }

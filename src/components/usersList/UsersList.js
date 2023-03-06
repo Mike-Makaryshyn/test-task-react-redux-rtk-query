@@ -8,7 +8,7 @@ import UserItem from "./UsersItem";
 
 import './user-list.scss';
 
-const UsersList = ({userRef}) => {
+const UsersList = ({userRef, isSuccessForm}) => {
   const [page, setPage] = useState(1);
   const [allShownUsers, setAllShownUsers] = useState([]);
 
@@ -19,11 +19,26 @@ const UsersList = ({userRef}) => {
     isError,
   } = useGetUsersQuery(page);
 
+  const { data: firstPageData = {} } = useGetUsersQuery(1);
+
   useEffect(() => {
     if (isSuccess) {
       setAllShownUsers((prevUsers) => [...prevUsers, ...usersData.users]);
     }
   }, [usersData, isSuccess]);
+
+  useEffect(() => {
+    if (isSuccessForm && page === 1) {
+      setAllShownUsers(() => [...usersData.users]);
+    }
+  }, [usersData.users, page, isSuccessForm, firstPageData]);
+
+  useEffect(() => {
+   if (isSuccessForm && page > 1) {
+      setAllShownUsers((prev)=> [firstPageData.users[0], ...prev.slice(0, -1)] )
+    }
+  }, [page, isSuccessForm, firstPageData]);
+
 
   const loadMore = () => {
     if (page !== usersData.total_pages) {

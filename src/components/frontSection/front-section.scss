@@ -26,6 +26,17 @@
    margin-bottom: 21px;
 }
 
+@media (max-width: 520px) {
+   .front-section-title {
+      font-size: 30px;
+   }
+   .front-section__content {
+      max-width: 380px;
+      text-align: center;
+      padding: 0 15px;
+   }
+ }
+
 .front-section-text {
    margin-bottom: 32px;
 }
