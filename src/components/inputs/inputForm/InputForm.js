@@ -1,38 +1,26 @@
-import { ErrorMessage, Field, useField } from "formik";
+import { ErrorMessage, Field } from "formik";
 import React from "react";
 import styles from "./inputForm.module.scss";
 import classNames from "classnames";
 
 const InputForm = ({ name, errors, touched }) => {
-  const [field, meta] = useField(name);
-
   const input = classNames({
     [styles.input]: true,
     [styles.inputError]: errors[name] && touched[name],
-    [styles.inputFocused]: meta.touched && meta.focused,
   });
 
   const label = classNames({
     [styles.nameInputLabel]: true,
     [styles.lebelErrorMessage]: errors[name] && touched[name],
-    [styles.labelFocused]: meta.touched && meta.focused,
   });
 
   return (
     <div className={`${name} input-wrapper`}>
       <div className={label}>{name}</div>
       <Field
-        {...field}
+        name={name}
         placeholder={`Your ${name}`}
         className={`${input} create-user__text-input`}
-        onFocus={(e) => {
-          field.onFocus(e);
-          meta.onFocus(e);
-        }}
-        onBlur={(e) => {
-          field.onBlur(e);
-          meta.onBlur(e);
-        }}
       />
 
       {name === "phone" && !errors.phone && (

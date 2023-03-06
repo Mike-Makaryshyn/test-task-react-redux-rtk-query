@@ -5,7 +5,7 @@ import { CSSTransition } from "react-transition-group";
 import { ErrorMessage } from "formik";
 import styles from "./file-input.module.scss";
 
-const FileInput = ({ setFieldValue,errors,touched }) => {
+const FileInput = ({ setFieldValue,errors,touched, keyObj }) => {
    const [fileName, setFileName] = useState('Upload your photo');
    const [fullFileName, setFullFileName] = useState('');
 
