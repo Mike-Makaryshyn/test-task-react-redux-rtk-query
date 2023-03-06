@@ -1,0 +1,36 @@
+
+.inputError {
+  border: 1px solid red;
+}
+
+.nameInputLabel {
+  position: absolute;
+  color: #7e7e7e;
+  top: -10px;
+  left: 20px;
+  background: #e5e5e5;
+  height: 14px;
+  width: 50px;
+  text-align: center;
+}
+
+.errorMessage {
+  color: red;
+  height: 14px;
+  font-size: 12px;
+  line-height: 14px;
+  padding: 4px 0 0 16px;
+}
+
+.lebelErrorMessage {
+  color: red;
+}
+
+.formatPhone {
+  font-size: 12px;
+  line-height: 14px;
+  color: #7e7e7e;
+  padding-left: 16px;
+  padding-top: 4px;
+}
+

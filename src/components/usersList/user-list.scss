@@ -11,14 +11,14 @@
    margin-bottom: 54px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 950px) {
    .users-wrapper {
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: repeat(3, 1fr);
    }
 }
 
-@media (max-width: 460px) {
+@media (max-width: 640px) {
    .users-wrapper {
       grid-template-columns: repeat(1, 1fr);
       grid-template-rows: repeat(1, 1fr);

@@ -1,3 +1,5 @@
+import { CSSTransition } from "react-transition-group";
+
 const maxLength = 26;
 
 export const renderText = (text) => {
@@ -9,7 +11,14 @@ export const renderText = (text) => {
 };
 
 export const renderToolkit = (isElHover, text) => {
-  if (isElHover &&text.length && text.length > maxLength) {
-    return <span className="toolkit">{text}</span>;
-  }
+    return (
+      <CSSTransition
+        in={isElHover && text.length && text.length > maxLength}
+        timeout={100}
+        classNames="fade"
+        unmountOnExit
+      >
+        <span className="toolkit">{text}</span>
+      </CSSTransition>
+    );
 };

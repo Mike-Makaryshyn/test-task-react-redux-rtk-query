@@ -24,12 +24,12 @@ const UsersList = ({userRef}) => {
       setAllShownUsers((prevUsers) => [...prevUsers, ...usersData.users]);
     }
   }, [usersData, isSuccess]);
+
   const loadMore = () => {
     if (page !== usersData.total_pages) {
       setPage((prev) => prev + 1);
     }
   };
-
 
   if (isError) return <Error />
 
@@ -43,7 +43,9 @@ const UsersList = ({userRef}) => {
     });
   };
 
-  const usersListElements = renderUsersList(allShownUsers);
+  const sortedUsers = allShownUsers.sort((a,b)=> b.registration_timestamp - a.registration_timestamp);
+
+  const usersListElements = renderUsersList(sortedUsers);
 
   return (
     <section className="user-list__section" ref={userRef}>

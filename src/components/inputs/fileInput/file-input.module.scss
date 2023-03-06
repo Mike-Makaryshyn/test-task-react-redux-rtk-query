@@ -1,0 +1,50 @@
+
+ .input {
+   border-radius: 4px;
+   border: 1px solid #D0CFCF;
+   background-color: #E5E5E5;
+   padding-left: 16px;
+   &::placeholder {
+     position: absolute;
+     top: 19px;
+     left: 16px;
+     font-size: 16px;
+     line-height: 26px;
+     color: #7E7E7E;
+   }
+   &:focus {
+     outline: none;
+   }
+ }
+ .inputError {
+   border: 1px solid red;
+ }
+ .nameInputLabel {
+   position: absolute;
+   color: #7E7E7E;
+   top: -10px;
+   left: 20px;
+   background: #E5E5E5;
+   height: 14px;
+   width: 50px;
+   text-align: center;
+ }
+ .errorMessage {
+   color: red;
+   height: 14px;
+   font-size: 12px;
+   line-height: 14px;
+   padding: 4px 0 0 16px;
+ }
+ .lebelErrorMessage {
+   color: red;
+ }
+ .formatPhone {
+   width: 147px;
+   height: 14px;
+   font-size: 12px;
+   line-height: 14px;
+   color: #7E7E7E;
+   padding-left: 16px;
+   padding-top: 4px;
+ }

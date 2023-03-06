@@ -1,184 +1,97 @@
-import { useState, useEffect, useRef } from "react";
-import Positions from "../positions/Positions";
-import successImg from '../../assets/success-image.svg'
+import { useEffect, useRef } from "react";
+import successImg from "../../assets/success-image.svg";
+import singUpSchema from "../../utils/schemaValidation";
+import { Form, Formik } from "formik";
 
-import {
-  useCreateUserMutation,
-  useGetPositionsQuery,
-  useGetTokenQuery,
-} from "../../redux/apiSlice";
+import InputForm from '../inputs/inputForm/InputForm';
+import FileInput from '../inputs/fileInput/FileInput';
+import RadioInputs from '../inputs/radioInputs/RadioInputs';
+import Spinner from "../spinners/Spinner";
 
-import './create-user.scss';
+import { useCreateUserMutation, useGetTokenQuery } from "../../redux/apiSlice";
+
+import "./create-user.scss";
 
 const CreateUserForm = ({ singUpRef }) => {
-  const [userName, setUserName] = useState("");
-  const [userEmail, setUserEmail] = useState("");
-  const [userPhone, setUserPhone] = useState("");
-  const [selectedPosition, setSelectedPosition] = useState("");
-  const [selectedPositionId, setSelectedPositionId] = useState(1);
-  const [fileInfo, setFileInfo] = useState({});
-  const maxTextLength = 26;
-
-  const [isFileNameHover, setIsFileNameHover] = useState(false);
   const successBlockRef = useRef();
 
-  const [createUser, {isError, isSuccess, error }] = useCreateUserMutation();
+  const [createUser, { isSuccess, isLoading, isError, error }] = useCreateUserMutation();
   const { data: tokenData } = useGetTokenQuery();
 
-  const {
-    data: positions = [],
-    isSuccess: isPosSucces,
-  } = useGetPositionsQuery();
+  const initialValues = {
+    name: "",
+    email: "",
+    phone: "",
+    position_id: "",
+    photo: "",
+  };
+
+  const timeToFormReturn = 3000;
 
   useEffect(() => {
-   if (!isError) {
-     setUserName("");
-     setUserEmail("");
-     setUserPhone("");
-     setSelectedPosition("");
-     setSelectedPositionId(1);
-     setFileInfo({});
-   }
+    if (isSuccess) {
+      singUpRef.current.style.display = "none";
+      successBlockRef.current.style.display = "flex";
 
- }, [isError]);
-
-  useEffect(() => {
-   if(isSuccess) {
-      singUpRef.current.style.display = 'none';
-      successBlockRef.current.style.display = 'flex';
-
-      setTimeout(()=> {
-         singUpRef.current.style.display = 'block';
-         successBlockRef.current.style.display = 'none';
-      }, 3000)
-   }
-
- // eslint-disable-next-line
- }, [isSuccess]);
-
-  const appendNewUserData = (formData) => {
-    formData.append("name", userName);
-    formData.append("email", userEmail);
-    formData.append("phone", userPhone);
-    formData.append("position", selectedPosition);
-    formData.append("position_id", selectedPositionId);
-    formData.append("photo", fileInfo);
-  };
-
-  const onCreateFormSubmit = (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    appendNewUserData(formData);
-
-    createUser({ formData, token: tokenData.token });
-  };
-
-  function onPositionChange(e) {
-    setSelectedPositionId(e.target.getAttribute("custom"));
-    setSelectedPosition(e.target.value);
-  }
-
-  const onFileChange = ({ target: { files } }) => {
-    const file = files[0];
-    setFileInfo(() => file);
-  };
-
-  const renderFileName = (text) => {
-   if(fileInfo && fileInfo.name && fileInfo.name.length > maxTextLength) {
-      return `${fileInfo.name.slice(0,  maxTextLength)}...`;
-   }
-
-   return text ? text : 'Upload your photo';
-  }
-
-  const renderFileToolkit = (isElHover, text) => {
-   if (isElHover && text && text.length > maxTextLength) {
-     return <span className="toolkit">{text ? text : 'Upload your photo'}</span>;
-   }
- };
+      setTimeout(() => {
+        singUpRef.current.style.display = "block";
+        successBlockRef.current.style.display = "none";
+      }, timeToFormReturn);
+    }
+    // eslint-disable-next-line
+  }, [isSuccess]);
 
 
   return (
-   <>
-   <section className="create-user" ref={singUpRef}>
-      <div className="center">
-        <h2 className="title">Working with POST request</h2>
+    <>
+      <section className="create-user" ref={singUpRef}>
+        <div className="center">
+          <h2 className="title">Working with POST request</h2>
+        </div>
+        <Formik
+          className="create-user__form" 
+          initialValues={initialValues}
+          validationSchema={singUpSchema}
+          onSubmit ={(values, {resetForm}) => {
+            const formData = new FormData();
+            formData.append('photo', values.photo);
+            formData.append('position_id', +values.position_id);
+            formData.append('name', values.name);
+            formData.append('email', values.email);
+            formData.append('phone', values.phone);
+
+            createUser({ formData, token: tokenData.token });
+            resetForm(initialValues);
+          }}
+        >
+          {({ errors, touched, setFieldValue, isValid }) => (
+            <>
+            {isLoading ? <Spinner /> : null}
+              <Form className="create-user__form">
+                <InputForm name="name" errors={errors} touched={touched} />
+                <InputForm name="email" errors={errors} touched={touched} />
+                <InputForm name="phone" errors={errors} touched={touched} />
+                <RadioInputs errors={errors} touched={touched} />
+                <FileInput
+                  errors={errors}
+                  touched={touched}
+                  setFieldValue={setFieldValue}
+                />
+                {isError ? <div style={{color: 'red', margin:'15px'}}>{error.data.message}</div> : null}
+
+               <div className="center">
+                   <button className={`submit-btn${isValid ? ' regular-btn' : ' disabled-btn'}`} type="submit">Sign up</button>
+                </div>
+              </Form>
+            </>
+          )}
+        </Formik>
+      </section>
+
+      <div ref={successBlockRef} className="success-block">
+        <h3 className="success-title title">User successfully registered</h3>
+        <img src={successImg} alt="" />
       </div>
-      <form className="create-user__form" onSubmit={onCreateFormSubmit} noValidate action="#">
-            <input
-               type="text"
-               className="create-user__text-input"
-               required
-               name="name"
-               value={userName}
-               placeholder="Your name"
-               onChange={(e) => setUserName(e.target.value)}
-            />
-            <input
-               type="email"
-               className="create-user__text-input"
-               required
-               name="email"
-               value={userEmail}
-               placeholder="Email"
-               onChange={(e) => setUserEmail(e.target.value)}
-            />
-         
-            <input
-               id="phone"
-               type="tel"
-               className="create-user__text-input phone"
-               required
-               name="phone"
-               placeholder="Phone"
-               value={userPhone}
-               onChange={(e) => setUserPhone(e.target.value)}
-            />
-            <label className="label-phone" htmlFor="phone">
-               +38 (XXX) XXX - XX - XX
-            </label>
-
-            {isError ? <div style={{color: 'red'}}>{error.data.message}</div>: null}
-
-            <div className="radio-wrapper">
-               <Positions 
-                  positions={positions.positions} 
-                  onPositionChange={onPositionChange}
-                  isPosSucces={isPosSucces}
-               />
-            </div>
-            
-            <label htmlFor="file-upload" className="custom-file-upload">
-              <span className="upload-mark">Upload</span> 
-              <span 
-                  className="filename"
-                  onMouseLeave={()=> setIsFileNameHover(()=> false)}
-                  onMouseEnter={()=> setIsFileNameHover(()=> true)}
-               >
-               {renderFileName(fileInfo.name)}
-              </span>
-               {renderFileToolkit(isFileNameHover, fileInfo.name)}
-            </label>
-
-            <input
-               className="create-user__file-input file"  
-               id="file-upload"
-               type="file"
-               required 
-               onChange={onFileChange}
-            />
-
-            <div className="center">
-                <button className="disabled-btn" type="submit">Sign up</button>
-            </div>
-         </form>
-         
-   </section>
-   <div ref={successBlockRef} className="success-block">
-      <h3 className="success-title title">User successfully registered</h3> 
-      <img src={successImg} alt="" />
-   </div>
     </>
   );
 };
